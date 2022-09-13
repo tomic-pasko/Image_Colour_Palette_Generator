@@ -63,6 +63,8 @@ def home():
         for colour in result_f:
             hex_v = '#%02x%02x%02x' % (colour[0], colour[1], colour[2])
             hex_colours.append(hex_v)
+
+        hex_colours.reverse()
         print(hex_colours)
 
         return render_template("index.html", number=int(n_colours), colours=hex_colours, year=current_year)
