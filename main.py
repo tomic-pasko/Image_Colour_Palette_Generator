@@ -5,11 +5,13 @@ from PIL import Image
 import numpy as np
 import os
 from datetime import date
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
+app.config['UPLOAD_FOLDER'] = "static/images/"
 
 bootstrap = Bootstrap(app)
 
@@ -26,9 +28,20 @@ def home():
         n_colours = request.form.get('n_colours') or default_value
 
         # Open file explorer and get image path
-        filename = filedialog.askopenfile(initialdir='/', title="Select image",
-                                          filetypes=(("Image files", '*.png*'), ("Image files", "*.jpg*")))
-        file_path = filename.name
+        # tkinter, part of Tk widget toolkit is not compatible with Heroku
+        # filename = filedialog.askopenfile(initialdir='/', title="Select image",
+        #                                   filetypes=(("Image files", '*.png*'), ("Image files", "*.jpg*")))
+
+        file = request.files['file']
+
+        # Get secure version of filename, i.e. replace spaces with underline...
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        file_path = f"static/images/{file.filename}"
+
+        # file_path = filename.name
+
         img = Image.open(file_path)
         # PIL image to numpy array, 3rd dimension remove 4th element
         imgarray = np.array(img)[:, :, :3]

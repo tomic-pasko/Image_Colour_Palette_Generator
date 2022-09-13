@@ -11296,3 +11296,8 @@ textarea.form-control-lg {
     margin: 0 auto;
     width:30% /* value of your choice which suits your alignment */
 }
+
+.custom-file-upload{
+    margin: 0 auto;
+    width: 60%
+}
